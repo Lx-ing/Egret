@@ -1,0 +1,20 @@
+{
+	"initial": [
+		"libs/modules/egret/egret.js",
+		"libs/modules/egret/egret.web.js",
+		"libs/modules/game/game.js",
+		"libs/modules/tween/tween.js",
+		"libs/modules/assetsmanager/assetsmanager.js",
+		"libs/modules/promise/promise.js"
+	],
+	"game": [
+		"bin-debug/LoadingUI.js",
+		"bin-debug/Main.js",
+		"bin-debug/NewBitmap.js",
+		"bin-debug/NumList.js",
+		"bin-debug/Platform.js",
+		"bin-debug/View.js",
+		"bin-debug/components/BestTextField.js",
+		"bin-debug/components/ScoreTextField.js"
+	]
+}
