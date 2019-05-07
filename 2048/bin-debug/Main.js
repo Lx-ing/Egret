@@ -157,9 +157,9 @@ var Main = (function (_super) {
         bg.graphics.beginFill(0xfaf8ef);
         bg.graphics.drawRect(0, 0, stageW, stageH);
         bg.graphics.endFill();
-        this.stage.addChild(bg);
+        this.addChild(bg);
         var view = new View(stageH, stageW);
-        this.stage.addChild(view);
+        this.addChild(view);
     };
     return Main;
 }(egret.DisplayObjectContainer));

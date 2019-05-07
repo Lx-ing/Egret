@@ -135,10 +135,17 @@ var NumList = (function (_super) {
     };
     /** 数字图像列表左移 */
     NumList.prototype.leftRemove = function () {
+        var oldList = [];
+        this.numArr.forEach(function (value) {
+            oldList.push(value.getValue());
+        });
         for (var i = 0; i < 16; i++) {
             if (this.numArr[i].getValue() == 0) {
                 for (var j = i + 1; j < (Math.floor(i / this.listCol) + 1) * this.listCol; j++) {
                     if (this.numArr[j].getValue() != 0) {
+                        //右边有值,进行平移                        
+                        var tw = egret.Tween.get(this.getChildAt(i));
+                        tw.to({ x: (10 + this.numArr[i].width) * (j % this.listCol) + 10 }, 2000);
                         for (var k = j + 1; k < (Math.floor(j / this.listCol) + 1) * this.listCol; k++) {
                             if (this.numArr[k].getValue() != 0) {
                                 if (this.numArr[k].getValue() == this.numArr[j].getValue()) {
@@ -169,14 +176,19 @@ var NumList = (function (_super) {
                 }
             }
         }
-        var flag = this.createNewNum();
-        if (flag == false)
+        var flag = this.createNewNum(oldList);
+        if (flag == 0)
             this.aim = 1;
-        this.updateList();
+        else if (flag == 2)
+            this.updateList();
         return this;
     };
     /** 数字图像列表右移 */
     NumList.prototype.rightRemove = function () {
+        var oldList = [];
+        this.numArr.forEach(function (value) {
+            oldList.push(value.getValue());
+        });
         for (var i = 15; i >= 0; i--) {
             if (this.numArr[i].getValue() == 0) {
                 for (var j = i - 1; j >= Math.floor(i / this.listCol) * this.listCol; j--) {
@@ -211,14 +223,19 @@ var NumList = (function (_super) {
                 }
             }
         }
-        var flag = this.createNewNum();
-        if (flag == false)
+        var flag = this.createNewNum(oldList);
+        if (flag == 0)
             this.aim = 1;
-        this.updateList();
+        else if (flag == 2)
+            this.updateList();
         return this;
     };
     /** 数字图像列表上移 */
     NumList.prototype.upRemove = function () {
+        var oldList = [];
+        this.numArr.forEach(function (value) {
+            oldList.push(value.getValue());
+        });
         for (var i = 0; i < this.numCount; i++) {
             if (this.numArr[i].getValue() == 0) {
                 for (var j = i + this.listCol; j <= (this.listRow - 1) * this.listCol + i % this.listCol; j += this.listCol) {
@@ -253,14 +270,19 @@ var NumList = (function (_super) {
                 }
             }
         }
-        var flag = this.createNewNum();
-        if (flag == false)
+        var flag = this.createNewNum(oldList);
+        if (flag == 0)
             this.aim = 1;
-        this.updateList();
+        else if (flag == 2)
+            this.updateList();
         return this;
     };
     /** 数字图像列表下移 */
     NumList.prototype.downRemove = function () {
+        var oldList = [];
+        this.numArr.forEach(function (value) {
+            oldList.push(value.getValue());
+        });
         for (var i = this.numCount - 1; i >= 0; i--) {
             if (this.numArr[i].getValue() == 0) {
                 for (var j = i - this.listCol; j >= i % this.listCol; j -= this.listCol) {
@@ -295,14 +317,19 @@ var NumList = (function (_super) {
                 }
             }
         }
-        var flag = this.createNewNum();
-        if (flag == false)
+        var flag = this.createNewNum(oldList);
+        if (flag == 0)
             this.aim = 1;
-        this.updateList();
+        else if (flag == 2)
+            this.updateList();
         return this;
     };
-    /** 随机生成新格子 */
-    NumList.prototype.createNewNum = function () {
+    /** 随机生成新格子
+     * 1.判断是否能产生新格子,如果不能产生新格子，返回0
+     * 2.如果可以产生，判断是否与移动前相同，如果相同，返回1
+     * 3.如果不相同，产生随机格子，返回2
+     */
+    NumList.prototype.createNewNum = function (oldList) {
         var arr = [];
         this.numArr.forEach(function (element, index) {
             if (element.getValue() == 0)
@@ -310,11 +337,23 @@ var NumList = (function (_super) {
         });
         //判断是否能产生新格子
         if (arr.length == 0) {
-            return false;
+            return 0;
         }
+        //判断是否与移动前相同
+        var isDifferent = false;
+        for (var i_1 = 0; i_1 < 16; i_1++) {
+            if (oldList[i_1] != this.numArr[i_1].getValue()) {
+                isDifferent = true;
+                break;
+            }
+        }
+        if (isDifferent == false) {
+            return 1;
+        }
+        //产生随机格子
         var i = arr[Math.floor(Math.random() * arr.length)];
         this.numArr[i].setValue(2);
-        return true;
+        return 2;
     };
     /** 判断是否结束游戏
      *  如果没结束游戏，返回0；

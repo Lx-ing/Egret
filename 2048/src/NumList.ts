@@ -95,10 +95,18 @@ class NumList extends egret.DisplayObjectContainer{
 
     /** 数字图像列表左移 */
     leftRemove():NumList {
-        for(let i = 0;i<16;i++){
+        let oldList = [];
+        this.numArr.forEach((value)=>{
+            oldList.push(value.getValue());
+        })
+        for(let i = 0;i<16;i++){     
             if(this.numArr[i].getValue() == 0){
                 for(let j = i+1;j<(Math.floor(i/this.listCol)+1)*this.listCol;j++){
                     if(this.numArr[j].getValue() != 0 ){
+                        //右边有值,进行平移                        
+                        let tw = egret.Tween.get(this.getChildAt(i));
+                        tw.to({x:(10 + this.numArr[i].width)*(j%this.listCol) + 10},2000);
+
                         for(let k=j+1;k<(Math.floor(j/this.listCol)+1)*this.listCol;k++){
                             if(this.numArr[k].getValue() != 0){
                                 if(this.numArr[k].getValue() == this.numArr[j].getValue()){ 
@@ -128,14 +136,18 @@ class NumList extends egret.DisplayObjectContainer{
                 }
             }                                                                                                                                                                                            
         }
-        let flag = this.createNewNum();
-        if(flag== false) this.aim =1;
-        this.updateList();
+        let flag = this.createNewNum(oldList);
+        if(flag == 0) this.aim = 1;
+        else if(flag == 2)  this.updateList();
         return this;
     }
 
     /** 数字图像列表右移 */
     rightRemove():NumList{
+        let oldList = [];
+        this.numArr.forEach((value)=>{
+            oldList.push(value.getValue());
+        })
         for(let i = 15;i>=0;i--){
             if(this.numArr[i].getValue() == 0){
                 for(let j = i-1;j>=Math.floor(i/this.listCol)*this.listCol;j--){
@@ -169,13 +181,17 @@ class NumList extends egret.DisplayObjectContainer{
                 }
             }        
         }
-        let flag = this.createNewNum();
-        if(flag == false) this.aim=1;
-        this.updateList();
+        let flag = this.createNewNum(oldList);
+        if(flag == 0) this.aim =1;
+        else if(flag == 2)  this.updateList();
         return this;
     }
     /** 数字图像列表上移 */
     upRemove():NumList {
+        let oldList = [];
+        this.numArr.forEach((value)=>{
+            oldList.push(value.getValue());
+        })
         for(let i = 0;i<this.numCount;i++){
             if(this.numArr[i].getValue() == 0){
                 for(let j = i+this.listCol;j<=(this.listRow-1)*this.listCol+i%this.listCol;j+=this.listCol){
@@ -209,13 +225,17 @@ class NumList extends egret.DisplayObjectContainer{
                 }
             }  
         }
-        let flag = this.createNewNum();
-        if(flag == false) this.aim=1;
-        this.updateList();
+        let flag = this.createNewNum(oldList);
+        if(flag == 0) this.aim =1;
+        else if(flag == 2)  this.updateList();
         return this;
     }
     /** 数字图像列表下移 */
     downRemove():NumList {
+        let oldList = [];
+        this.numArr.forEach((value)=>{
+            oldList.push(value.getValue());
+        })
         for(let i = this.numCount-1;i>=0;i--){
             if(this.numArr[i].getValue() == 0){
                 for(let j = i-this.listCol;j>=i%this.listCol;j-=this.listCol){
@@ -249,25 +269,41 @@ class NumList extends egret.DisplayObjectContainer{
                 }
             }  
         }
-        let flag = this.createNewNum();
-        if(flag == false) this.aim =1;
-        this.updateList();
+        let flag = this.createNewNum(oldList);
+        if(flag == 0) this.aim =1;
+        else if(flag == 2)  this.updateList();
         return this;
     }
 
-    /** 随机生成新格子 */
-    private createNewNum(){
+    /** 随机生成新格子
+     * 1.判断是否能产生新格子,如果不能产生新格子，返回0
+     * 2.如果可以产生，判断是否与移动前相同，如果相同，返回1
+     * 3.如果不相同，产生随机格子，返回2
+     */
+    private createNewNum(oldList):number{
         let arr=[];
         this.numArr.forEach((element,index) => {
             if(element.getValue() == 0) arr.push(index);
         });
         //判断是否能产生新格子
         if(arr.length == 0){
-            return false;
+            return 0;
         }
+        //判断是否与移动前相同
+        let isDifferent = false;
+        for(let i = 0;i<16;i++){
+            if(oldList[i] != this.numArr[i].getValue()){
+                isDifferent = true;
+                break;
+            } 
+        }
+        if(isDifferent == false){
+            return 1;
+        }
+        //产生随机格子
         let i = arr[Math.floor(Math.random()*arr.length)];
         this.numArr[i].setValue(2);
-        return true;
+        return 2;
     }
     /** 判断是否结束游戏
      *  如果没结束游戏，返回0；

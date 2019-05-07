@@ -93,9 +93,9 @@ class Main extends egret.DisplayObjectContainer {
         bg.graphics.beginFill(0xfaf8ef);
         bg.graphics.drawRect(0,0,stageW,stageH);
         bg.graphics.endFill();
-        this.stage.addChild(bg);
+        this.addChild(bg);
 
         let view = new View(stageH,stageW);
-        this.stage.addChild(view);
+        this.addChild(view);
     }
 }
