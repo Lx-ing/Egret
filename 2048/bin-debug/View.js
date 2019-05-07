@@ -97,25 +97,25 @@ var View = (function (_super) {
         document.addEventListener("keyup", function (evt) {
             var num2 = that.nums;
             if (evt.keyCode == 37 || evt.keyCode == 65) {
-                num2 = num2.leftRemove();
+                num2 = num2.leftRemove(0);
                 that.south.removeChildAt(1);
                 that.south.addChild(num2);
                 that.nums = num2;
             }
             if (evt.keyCode == 38 || evt.keyCode == 87) {
-                num2 = num2.upRemove();
+                num2 = num2.upRemove(0);
                 that.south.removeChildAt(1);
                 that.south.addChild(num2);
                 that.nums = num2;
             }
             if (evt.keyCode == 39 || evt.keyCode == 68) {
-                num2 = num2.rightRemove();
+                num2 = num2.rightRemove(0);
                 that.south.removeChildAt(1);
                 that.south.addChild(num2);
                 that.nums = num2;
             }
             if (evt.keyCode == 40 || evt.keyCode == 83) {
-                num2 = num2.downRemove();
+                num2 = num2.downRemove(0);
                 that.south.removeChildAt(1);
                 that.south.addChild(num2);
                 that.nums = num2;
